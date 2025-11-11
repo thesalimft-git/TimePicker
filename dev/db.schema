@@ -1,0 +1,26 @@
+# timepicker
+# https://app.quickdatabasediagrams.com/#/
+
+Student
+-
+id int
+name string
+phone string
+
+
+Course
+-
+id int
+name string
+calendar_slot int FK >- Calendar_slot.id  # one-to-many
+
+
+
+Calendar_slot
+-
+id int
+day string
+# slot_time (3-5, 5-7, 7-9)
+empty boolean
+count_student int
+students int FK >-< Student.id  # many-to-many
