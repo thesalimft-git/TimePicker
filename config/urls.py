@@ -16,8 +16,25 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
+
+def api_root(request):
+    """API root endpoint"""
+    return JsonResponse({
+        'message': 'TimePicker API',
+        'endpoints': {
+            'admin': '/admin/',
+            'api': '/api/',
+            'students': '/api/students/',
+            'courses': '/api/courses/',
+            'calendar-slots': '/api/calendar-slots/',
+            'api-auth': '/api-auth/',
+        }
+    })
 
 urlpatterns = [
+    path('', api_root, name='api-root'),
     path('admin/', admin.site.urls),
+    path('api/', include('api.urls')),
     path('api-auth/', include('rest_framework.urls'))
 ]
