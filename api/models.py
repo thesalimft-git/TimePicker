@@ -1,5 +1,4 @@
 from django.db import models
-from django.core.validators import EmailValidator
 
 
 class Student(models.Model):
@@ -7,7 +6,7 @@ class Student(models.Model):
     student_id = models.CharField(max_length=50, unique=True, help_text="Unique student identifier")
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
-    email = models.EmailField(validators=[EmailValidator()], unique=True)
+    email = models.EmailField(unique=True)
     phone = models.CharField(max_length=20, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -86,5 +85,10 @@ class CalendarSlot(models.Model):
     def clean(self):
         """Validate that end_time is after start_time"""
         from django.core.exceptions import ValidationError
-        if self.end_time <= self.start_time:
+        if self.end_time and self.start_time and self.end_time <= self.start_time:
             raise ValidationError("End time must be after start time.")
+    
+    def save(self, *args, **kwargs):
+        """Override save to call full_clean for validation"""
+        self.full_clean()
+        super().save(*args, **kwargs)
